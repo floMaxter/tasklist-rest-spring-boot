@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/tasklist
+    username: tasklist
+    password: tasklist
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+      continue-on-error: false
+#      schema-locations: classpath:db/migration/schema.sql
+#      data-locations: classpath:db/migration/demo_data.sql
+security:
+  jwt:
+    secret: O2doZ2praGFqa2doc2Rqa2ZnaHNqa2RmZ2hzZmhnd2loZ3VybnV2d3J1Z2JxdXJnbnVxZmJ1cWhycW51cmd1aWZidnVpYnFncA==
+    access: 3600000
+    refresh: 2592000000
