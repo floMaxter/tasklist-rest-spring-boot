@@ -17,7 +17,7 @@ public class User {
 
     private String password;
 
-    private String passwordInformation;
+    private String passwordConfirmation;
 
     private Set<Role> roles;
 

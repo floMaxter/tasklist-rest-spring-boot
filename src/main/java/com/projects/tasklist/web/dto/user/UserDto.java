@@ -13,7 +13,6 @@ public class UserDto {
     @NotNull(message = "Id shouldn't be null", groups = OnUpdate.class)
     private Long id;
 
-
     @NotNull(message = "Name shouldn't be null",
             groups = {OnCreate.class, OnUpdate.class})
     @Length(max = 255, message = "The length of the name should be less than 255 characters",
@@ -32,7 +31,7 @@ public class UserDto {
     private String password;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotNull(message = "Password shouldn't be null",
+    @NotNull(message = "Password confirmation shouldn't be null",
             groups = {OnCreate.class})
-    private String passwordInformation;
+    private String passwordConfirmation;
 }

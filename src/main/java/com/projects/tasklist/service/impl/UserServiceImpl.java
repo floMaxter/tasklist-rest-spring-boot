@@ -1,38 +1,73 @@
 package com.projects.tasklist.service.impl;
 
+import com.projects.tasklist.domain.exception.ResourceNotFoundException;
+import com.projects.tasklist.domain.user.Role;
 import com.projects.tasklist.domain.user.User;
+import com.projects.tasklist.repository.UserRepository;
 import com.projects.tasklist.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
     @Override
+    @Transactional(readOnly = true)
     public User getById(Long userId) {
-        return null;
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getByUsername(String username) {
-        return null;
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
+    @Transactional
     public User update(User user) {
-        return null;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.update(user);
+        return user;
     }
 
     @Override
+    @Transactional
     public User create(User user) {
-        return null;
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalStateException("User already exists.");
+        }
+        if (!user.getPassword().equals(user.getPasswordConfirmation())) {
+            throw new IllegalStateException("Password and password confirmation don't match.");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Set<Role> roles = Set.of(Role.ROLE_USER);
+        user.setRoles(roles);
+        userRepository.create(user);
+        userRepository.insertUserRole(user.getId(), Role.ROLE_USER);
+        return user;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isTaskOwner(Long userId, Long taskId) {
-        return false;
+        return userRepository.isTaskOwner(userId, taskId);
     }
 
     @Override
+    @Transactional
     public void delete(Long userId) {
-
+        userRepository.delete(userId);
     }
 }

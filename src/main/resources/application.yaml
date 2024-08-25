@@ -15,3 +15,7 @@ security:
     secret: O2doZ2praGFqa2doc2Rqa2ZnaHNqa2RmZ2hzZmhnd2loZ3VybnV2d3J1Z2JxdXJnbnVxZmJ1cWhycW51cmd1aWZidnVpYnFncA==
     access: 3600000
     refresh: 2592000000
+
+logging:
+  level:
+    org.springframework.security: trace
