@@ -13,6 +13,7 @@ import com.projects.tasklist.web.mappers.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,7 @@ public class UserController {
 
     @PutMapping
     @Operation(summary = "Update user")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#userDto.id)")
     public UserDto updateUser(@Validated(OnUpdate.class) @RequestBody UserDto userDto) {
         User user = userMapper.toEntity(userDto);
         User updatedUser = userService.update(user);
@@ -50,6 +52,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @Operation(summary = "Get UserDto by id")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
     public UserDto getUserById(@PathVariable Long userId) {
         User user = userService.getById(userId);
         return userMapper.toDto(user);
@@ -57,12 +60,14 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     @Operation(summary = "Delete user by id")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
     public void deleteUserById(@PathVariable Long userId) {
         userService.delete(userId);
     }
 
     @GetMapping("/{userId}/tasks")
     @Operation(summary = "Get all tasks by userId")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
     public List<TaskDto> getTasksByUserId(@PathVariable Long userId) {
         List<Task> tasks = taskService.getAllByUserId(userId);
         return taskMapper.toDto(tasks);
@@ -70,6 +75,7 @@ public class UserController {
 
     @PostMapping("/{userId}/tasks")
     @Operation(summary = "Add task to user")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
     public TaskDto createTask(@PathVariable Long userId,
                               @Validated(OnCreate.class) @RequestBody TaskDto taskDto) {
         Task task = taskMapper.toEntity(taskDto);

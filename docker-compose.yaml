@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  tasklist-service:
+    container_name: tasklist
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: target/tasklist-0.0.1-SNAPSHOT-exec.jar
+    depends_on:
+      - tasklist-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://tasklist-db:5432/tasklist?currentSchema=tasklist
+      - SPRING_DATASOURCE_USERNAME=tasklist
+      - SPRING_DATASOURCE_PASSWORD=tasklist
+    ports:
+      - '8080:8080'
+  tasklist-db:
+    image: postgres:16
+    container_name: tasklist-db
+    environment:
+      - POSTGRES_USER=tasklist
+      - POSTGRES_PASSWORD=tasklist
+      - POSTGRES_DB=tasklist
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./src/main/resources/db-init:/docker-entrypoint-initdb.d
