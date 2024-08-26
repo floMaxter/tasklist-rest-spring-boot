@@ -27,3 +27,4 @@ spring-boot-starter-*/build/
 *.tmp
 *.swp
 *~
+.env
