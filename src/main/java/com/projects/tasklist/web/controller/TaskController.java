@@ -5,6 +5,8 @@ import com.projects.tasklist.service.TaskService;
 import com.projects.tasklist.web.dto.task.TaskDto;
 import com.projects.tasklist.web.dto.validation.OnUpdate;
 import com.projects.tasklist.web.mappers.TaskMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/tasks")
 @RequiredArgsConstructor
 @Validated
+@Tag(name = "Task Controller", description = "Task API")
 public class TaskController {
 
     private final TaskService taskService;
@@ -26,6 +29,7 @@ public class TaskController {
     private final TaskMapper taskMapper;
 
     @PutMapping
+    @Operation(summary = "update task")
     public TaskDto updateTask(@Validated(OnUpdate.class) @RequestBody TaskDto taskDto) {
         Task task = taskMapper.toEntity(taskDto);
         Task updatedTask = taskService.update(task);
@@ -33,12 +37,14 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
+    @Operation(summary = "Get task by id")
     public TaskDto getTaskById(@PathVariable Long taskId) {
         Task task = taskService.getById(taskId);
         return taskMapper.toDto(task);
     }
 
     @DeleteMapping("/{taskId}")
+    @Operation(summary = "Delete task by id")
     public void deleteTaskById(@PathVariable Long taskId) {
         taskService.delete(taskId);
     }

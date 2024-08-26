@@ -17,7 +17,7 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class TaskRepositoryImpl implements TaskRepository {
 
@@ -30,7 +30,7 @@ public class TaskRepositoryImpl implements TaskRepository {
                    t.expiration_date AS task_expiration_date,
                    t.status          AS task_status
             FROM tasks t
-            WHERE id = ?""";
+            WHERE t.id = ?""";
 
     private final String FIND_ALL_BY_USER_ID = """
             SELECT t.id              AS task_id,
