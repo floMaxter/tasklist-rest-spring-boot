@@ -16,8 +16,9 @@ public class CustomSecurityExpressionHandler extends DefaultMethodSecurityExpres
     private final AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
 
     @Override
-    protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication,
-                                                                              MethodInvocation invocation) {
+    protected MethodSecurityExpressionOperations createSecurityExpressionRoot(
+            final Authentication authentication,
+            final MethodInvocation invocation) {
         CustomMethodSecurityExpressionRoot root = new CustomMethodSecurityExpressionRoot(authentication);
         root.setTrustResolver(trustResolver);
         root.setPermissionEvaluator(getPermissionEvaluator());
@@ -27,7 +28,7 @@ public class CustomSecurityExpressionHandler extends DefaultMethodSecurityExpres
     }
 
     @Override
-    public void setApplicationContext(org.springframework.context.ApplicationContext applicationContext) {
+    public void setApplicationContext(final ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         this.applicationContext = applicationContext;
     }

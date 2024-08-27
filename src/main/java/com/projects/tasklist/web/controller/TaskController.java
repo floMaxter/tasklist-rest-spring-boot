@@ -32,7 +32,9 @@ public class TaskController {
     @PutMapping
     @Operation(summary = "update task")
     @PreAuthorize("canAccessTask(#taskDto.id)")
-    public TaskDto updateTask(@Validated(OnUpdate.class) @RequestBody TaskDto taskDto) {
+    public TaskDto updateTask(
+            @Validated(OnUpdate.class)
+            @RequestBody final TaskDto taskDto) {
         Task task = taskMapper.toEntity(taskDto);
         Task updatedTask = taskService.update(task);
         return taskMapper.toDto(updatedTask);
@@ -41,7 +43,7 @@ public class TaskController {
     @GetMapping("/{taskId}")
     @Operation(summary = "Get task by id")
     @PreAuthorize("canAccessTask(#taskId)")
-    public TaskDto getTaskById(@PathVariable Long taskId) {
+    public TaskDto getTaskById(@PathVariable final Long taskId) {
         Task task = taskService.getById(taskId);
         return taskMapper.toDto(task);
     }
@@ -49,7 +51,7 @@ public class TaskController {
     @DeleteMapping("/{taskId}")
     @Operation(summary = "Delete task by id")
     @PreAuthorize("canAccessTask(#taskId)")
-    public void deleteTaskById(@PathVariable Long taskId) {
+    public void deleteTaskById(@PathVariable final Long taskId) {
         taskService.delete(taskId);
     }
 }
