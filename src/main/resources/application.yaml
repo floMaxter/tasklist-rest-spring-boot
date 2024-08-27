@@ -26,6 +26,8 @@ security:
 springdoc:
   override-with-generic-response: false
 
-logging:
-  level:
-    org.springframework.security: info
+minio:
+  bucket: ${MINIO_BUCKET}
+  url: ${MINIO_URL}
+  accessKey: ${MINIO_ACCESS_KEY}
+  secretKey: ${MINIO_SECRET_KEY}
