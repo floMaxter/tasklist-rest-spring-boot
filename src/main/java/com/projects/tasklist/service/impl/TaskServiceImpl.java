@@ -33,7 +33,8 @@ public class TaskServiceImpl implements TaskService {
     @Cacheable(value = "TaskService::getById", key = "#taskId")
     public Task getById(final Long taskId) {
         return taskRepository.findById(taskId)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Task not found"));
     }
 
     @Override

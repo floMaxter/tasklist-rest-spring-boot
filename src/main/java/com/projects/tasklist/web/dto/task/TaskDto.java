@@ -25,19 +25,22 @@ public class TaskDto {
     @Schema(description = "Task title", example = "Do homework")
     @NotNull(message = "Title shouldn't be null",
             groups = {OnCreate.class, OnUpdate.class})
-    @Length(max = 255, message = "The length of the title should be less than 255 characters",
+    @Length(max = 255,
+            message = "Title should be less than 255 characters",
             groups = {OnCreate.class, OnUpdate.class})
     private String title;
 
     @Schema(description = "English workbook ex 12 p 45")
-    @Length(max = 255, message = "The length of the title should be less than 255 characters",
+    @Length(max = 255,
+            message = "Description should be less than 255 characters",
             groups = {OnCreate.class, OnUpdate.class})
     private String description;
 
     @Schema(description = "Task status", example = "TODO")
     private Status status;
 
-    @Schema(description = "Task expiration date", example = "2024-08-29 12:00:00.000000")
+    @Schema(description = "Task expiration date",
+            example = "2024-08-29 12:00:00.000000")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime expirationDate;
