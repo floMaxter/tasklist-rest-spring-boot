@@ -25,9 +25,11 @@ public class CustomSecurityExpression {
         return userId.equals(id) || hasAnyRole(authentication, Role.ROLE_ADMIN);
     }
 
-    private boolean hasAnyRole(final Authentication authentication, final Role... roles) {
+    private boolean hasAnyRole(final Authentication authentication,
+                               final Role... roles) {
         for (Role role : roles) {
-            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
+            SimpleGrantedAuthority authority =
+                    new SimpleGrantedAuthority(role.name());
             if (authentication.getAuthorities().contains(authority)) {
                 return true;
             }

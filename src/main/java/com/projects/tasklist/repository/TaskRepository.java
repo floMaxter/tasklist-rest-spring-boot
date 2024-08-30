@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query(value = """

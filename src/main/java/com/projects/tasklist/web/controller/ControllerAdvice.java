@@ -22,19 +22,22 @@ public class ControllerAdvice {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionBody handleResourceNotFount(final ResourceNotFoundException ex) {
+    public ExceptionBody handleResourceNotFount(
+            final ResourceNotFoundException ex) {
         return new ExceptionBody(ex.getMessage());
     }
 
     @ExceptionHandler(ResourceMappingException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBody handleResourceMapping(final ResourceMappingException ex) {
+    public ExceptionBody handleResourceMapping(
+            final ResourceMappingException ex) {
         return new ExceptionBody(ex.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handleIllegalState(final IllegalStateException ex) {
+    public ExceptionBody handleIllegalState(
+            final IllegalStateException ex) {
         return new ExceptionBody(ex.getMessage());
     }
 
@@ -52,7 +55,8 @@ public class ControllerAdvice {
         ExceptionBody exceptionBody = new ExceptionBody("Validation failed.");
         List<FieldError> errorList = ex.getBindingResult().getFieldErrors();
         exceptionBody.setErrors(errorList.stream()
-                .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
+                .collect(Collectors.toMap(FieldError::getField,
+                        FieldError::getDefaultMessage)));
         return exceptionBody;
     }
 
@@ -71,7 +75,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handleAuthentication(final AuthenticationException ex) {
+    public ExceptionBody handleAuthentication(
+            final AuthenticationException ex) {
         return new ExceptionBody("Authentication failed.");
     }
 

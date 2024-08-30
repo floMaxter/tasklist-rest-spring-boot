@@ -17,7 +17,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: maven-${{ hasFiles('**/pom.xml') }}
+          key: maven-${{ hashFiles('**/pom.xml')}}
           restore-keys: |
             maven-
-      - run: mvc clean install
+      - run: mvn clean install

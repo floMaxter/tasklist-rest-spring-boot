@@ -88,8 +88,10 @@ public class JwtTokenProvider {
         User user = userService.getById(userId);
         jwtResponse.setId(userId);
         jwtResponse.setUsername(user.getUsername());
-        jwtResponse.setAccessToken(createAccessToken(userId, user.getUsername(), user.getRoles()));
-        jwtResponse.setRefreshToken(createRefreshToke(userId, user.getUsername()));
+        jwtResponse.setAccessToken(
+                createAccessToken(userId, user.getUsername(), user.getRoles()));
+        jwtResponse.setRefreshToken(
+                createRefreshToke(userId, user.getUsername()));
         return jwtResponse;
     }
 
@@ -126,7 +128,9 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(final String token) {
         String username = getUsername(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        UserDetails userDetails =
+                userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, "", userDetails.getAuthorities());
     }
 }
