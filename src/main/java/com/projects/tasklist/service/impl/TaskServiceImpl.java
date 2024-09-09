@@ -42,7 +42,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @CachePut(value = "TaskService::getById", key = "#task.id")
     public Task update(final Task task) {
-        Task existing = taskRepository.getReferenceById(task.getId());
+        Task existing = getById(task.getId());
         if (task.getStatus() == null) {
             existing.setStatus(Status.TODO);
         } else {
