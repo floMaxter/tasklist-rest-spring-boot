@@ -80,9 +80,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @CacheEvict(value = "TaskService::getById", key = "#taskId")
     public void uploadImage(final Long taskId, final TaskImage image) {
-        Task task = getById(taskId);
         String fileName = imageService.upload(image);
-        task.getImages().add(fileName);
-        taskRepository.save(task);
+        taskRepository.addImage(taskId, fileName);
     }
 }
