@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -25,7 +26,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional(readOnly = true)
     @Cacheable(value = "UserService::getById", key = "#userId")
     public User getById(final Long userId) {
         return userRepository.findById(userId).orElseThrow(
@@ -33,7 +33,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     @Cacheable(value = "UserService::getByUsername", key = "#username")
     public User getByUsername(final String username) {
         return userRepository.findByUsername(username).orElseThrow(

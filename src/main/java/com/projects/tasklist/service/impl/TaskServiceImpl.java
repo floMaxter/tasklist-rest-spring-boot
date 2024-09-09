@@ -4,11 +4,9 @@ import com.projects.tasklist.domain.exception.ResourceNotFoundException;
 import com.projects.tasklist.domain.task.Status;
 import com.projects.tasklist.domain.task.Task;
 import com.projects.tasklist.domain.task.TaskImage;
-import com.projects.tasklist.domain.user.User;
 import com.projects.tasklist.repository.TaskRepository;
 import com.projects.tasklist.service.ImageService;
 import com.projects.tasklist.service.TaskService;
-import com.projects.tasklist.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -19,12 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-
-    private final UserService userService;
 
     private final ImageService imageService;
 
@@ -67,10 +64,8 @@ public class TaskServiceImpl implements TaskService {
         if (task.getStatus() == null) {
             task.setStatus(Status.TODO);
         }
-        User user = userService.getById(userId);
         taskRepository.save(task);
-        user.getTasks().add(task);
-        userService.update(user);
+        taskRepository.assignTask(userId, task.getId());
         return task;
     }
 
