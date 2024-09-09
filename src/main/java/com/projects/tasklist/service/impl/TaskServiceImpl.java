@@ -42,7 +42,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @CachePut(value = "TaskService::getById", key = "#task.id")
     public Task update(final Task task) {
-        Task existing = taskRepository.getReferenceById(task.getId());
+        Task existing = getById(task.getId());
         if (task.getStatus() == null) {
             existing.setStatus(Status.TODO);
         } else {
@@ -80,9 +80,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @CacheEvict(value = "TaskService::getById", key = "#taskId")
     public void uploadImage(final Long taskId, final TaskImage image) {
-        Task task = getById(taskId);
         String fileName = imageService.upload(image);
-        task.getImages().add(fileName);
-        taskRepository.save(task);
+        taskRepository.addImage(taskId, fileName);
     }
 }
