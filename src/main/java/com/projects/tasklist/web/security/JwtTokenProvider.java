@@ -65,8 +65,8 @@ public class JwtTokenProvider {
                 .collect(Collectors.toList());
     }
 
-    public String createRefreshToke(final Long userId,
-                                    final String username) {
+    public String createRefreshToken(final Long userId,
+                                     final String username) {
         Claims claims = Jwts.claims().subject(username)
                 .add("id", userId)
                 .build();
@@ -91,7 +91,7 @@ public class JwtTokenProvider {
         jwtResponse.setAccessToken(
                 createAccessToken(userId, user.getUsername(), user.getRoles()));
         jwtResponse.setRefreshToken(
-                createRefreshToke(userId, user.getUsername()));
+                createRefreshToken(userId, user.getUsername()));
         return jwtResponse;
     }
 
