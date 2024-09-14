@@ -1,9 +1,11 @@
 package com.projects.tasklist.service.impl;
 
+import com.projects.tasklist.domain.MailType;
 import com.projects.tasklist.domain.exception.ResourceNotFoundException;
 import com.projects.tasklist.domain.user.Role;
 import com.projects.tasklist.domain.user.User;
 import com.projects.tasklist.repository.UserRepository;
+import com.projects.tasklist.service.MailService;
 import com.projects.tasklist.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Properties;
 import java.util.Set;
 
 @Service
@@ -24,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final MailService mailService;
 
     @Override
     @Cacheable(value = "UserService::getById", key = "#userId")
@@ -74,6 +79,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = Set.of(Role.ROLE_USER);
         user.setRoles(roles);
         userRepository.save(user);
+        mailService.sendEmail(user, MailType.REGISTRATION, new Properties());
         return user;
     }
 
@@ -82,6 +88,14 @@ public class UserServiceImpl implements UserService {
             key = "#userId" + "." + "#taskId")
     public boolean isTaskOwner(final Long userId, final Long taskId) {
         return userRepository.isTaskOwner(userId, taskId);
+    }
+
+    @Override
+    @Cacheable(value = "UserService::getTaskAuthor",
+            key = "#taskId")
+    public User getTaskAuthor(final Long taskId) {
+        return userRepository.findTaskAuthor(taskId).orElseThrow(
+                () -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
