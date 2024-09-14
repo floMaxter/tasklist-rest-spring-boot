@@ -3,7 +3,7 @@ Application implements basic functionality for working with task and users.
 
 For looking all endpoint you can open `http://localhost:8080/swagger-ui/index.html`.
 
-### Prerequisites: [Java 21](https://jdk.java.net/21/), [Maven](https://maven.apache.org/), [PostgreSQL](https://www.postgresql.org/), [Docker](https://www.docker.com/), [Swagger](https://inlnk.ru/O1g6M4), [Spring Security](https://spring.io/projects/spring-security), [Redis](https://redis.io/), [Liquibase](https://www.liquibase.com/), [MyBatis](https://mybatis.org/mybatis-3/), [Hibernate JPA](https://hibernate.org/), [MinIO](https://min.io/)
+### Prerequisites: [Java 21](https://jdk.java.net/21/), [Maven](https://maven.apache.org/), [PostgreSQL](https://www.postgresql.org/), [Docker](https://www.docker.com/), [Swagger](https://inlnk.ru/O1g6M4), [Spring Security](https://spring.io/projects/spring-security), [Redis](https://redis.io/), [Liquibase](https://www.liquibase.com/), [MyBatis](https://mybatis.org/mybatis-3/), [Hibernate JPA](https://hibernate.org/), [MinIO](https://min.io/), [GraphQL](https://graphql.org/), [Sending Email](https://docs.spring.io/spring-boot/reference/io/email.html)
 
 ## Description
 Application include two main classes: `User` and `Task`. 
@@ -15,6 +15,10 @@ Application include two main classes: `User` and `Task`.
 `Task` class represents task in this application. Task can have images.
 
 The security of the application is based on authentication using `JWT tokens`.
+
+The application contains integration with `GraphQl`.
+
+The application have a `MailService` which sends emails to new users after registration and sends reminders about the expiration of tasks.
 
 ## Sequence diagram
 
@@ -32,7 +36,7 @@ The security of the application is based on authentication using `JWT tokens`.
 
 To run this application you need to create `.env` file in root directory with next environments:
 
-* `HOST` - host of Postgresql database
+* `POSTGRES_HOST` - host of Postgresql database
 * `POSTGRES_USERNAME` - username for Postgresql database
 * `POSTGRES_PASSWORD` - password for Postgresql database
 * `POSTGRES_DATABASE` - name of Postgresql database
@@ -44,6 +48,10 @@ To run this application you need to create `.env` file in root directory with ne
 * `MINIO_URL` - URL of MinIO instance
 * `MINIO_ACCESS_KEY` - access key of MinIO
 * `MINIO_SECRET_KEY` - secret key of MinIO
+* `SPRING_MAIL_HOST` - host of mail sender
+* `SPRING_MAIL_PORT` - the port on which the message from the mail will be listened to (default 587)
+* `SPRING_MAIL_USERNAME` - address of mail sender
+* `SPRING_MAIL_PASSWORD` - password for sending message from the sender's mail
 
 You can use example .env.example file with some predefined environments.
 
@@ -69,7 +77,7 @@ or started by running each component individually in a `docker container` or `lo
 PostgreSQL is used to store information about tasks and users.
 
 ```shell
-docker run --name tasklist-db -p 5433:5432 -e POSTGRES_USER=tasklist -e POSTGRES_PASSWORD=tasklist -e POSTGRES_DB=tasklist postgres:16
+docker run --name tasklist-db -p 5433:5432 -e POSTGRES_USER=<your_user> -e POSTGRES_PASSWORD=<your_password> -e POSTGRES_DB=<your_db> postgres:16
 ```
 
 > Note that the port in the database is not the default one

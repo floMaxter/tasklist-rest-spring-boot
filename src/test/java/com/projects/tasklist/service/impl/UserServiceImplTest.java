@@ -1,6 +1,7 @@
 package com.projects.tasklist.service.impl;
 
 import com.projects.tasklist.config.TestConfig;
+import com.projects.tasklist.domain.MailType;
 import com.projects.tasklist.domain.exception.ResourceNotFoundException;
 import com.projects.tasklist.domain.user.Role;
 import com.projects.tasklist.domain.user.User;
@@ -18,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
@@ -31,6 +33,9 @@ public class UserServiceImplTest {
 
     @MockBean
     private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private MailServiceImpl mailService;
 
     @Autowired
     private UserServiceImpl userService;
@@ -119,22 +124,30 @@ public class UserServiceImplTest {
     @Test
     void createUserDoesNotExistReturnsNotEmptyOption() {
         // given
-        String username = "username";
+        String username = "username@gmail.com";
         String password = "password";
+        String encodedPassword = "encodedPassword";
         var user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setPasswordConfirmation(password);
         Mockito.when(userRepository.findByUsername(username))
                 .thenReturn(Optional.empty());
+        Mockito.when(passwordEncoder.encode(password))
+                .thenReturn(encodedPassword);
 
         // when
         var testUser = userService.create(user);
 
         // then
         Mockito.verify(userRepository).save(user);
-        Mockito.verify(passwordEncoder).encode(password);
+        Mockito.verify(mailService).sendEmail(
+                user,
+                MailType.REGISTRATION,
+                new Properties()
+        );
         Assertions.assertEquals(Set.of(Role.ROLE_USER), testUser.getRoles());
+        Assertions.assertEquals(encodedPassword, testUser.getPassword());
     }
 
     @Test
@@ -154,12 +167,11 @@ public class UserServiceImplTest {
         // then
         Assertions.assertThrows(IllegalStateException.class,
                 () -> userService.create(user));
-        Mockito.verify(userRepository, Mockito.never() ).save(user);
+        Mockito.verify(userRepository, Mockito.never()).save(user);
     }
 
     @Test
-    void createUserPasswordConfirmationIsIncorrectThrowsIllegalStateException()
-    {
+    void createUserPasswordConfirmationIsIncorrectThrowsIllegalStateException() {
         // given
         String username = "username";
         String password = "password";
@@ -176,7 +188,7 @@ public class UserServiceImplTest {
         // then
         Assertions.assertThrows(IllegalStateException.class,
                 () -> userService.create(user));
-        Mockito.verify(userRepository, Mockito.never() ).save(user);
+        Mockito.verify(userRepository, Mockito.never()).save(user);
     }
 
     @Test
